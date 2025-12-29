@@ -224,6 +224,61 @@ const maySchedule = {
   "5/31(일)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"]
 };
 
+/* ===== 6월 KBO 일정 데이터 ===== */
+const juneSchedule = {
+  "6/02(화)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"],
+  "6/03(수)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"],
+  "6/04(목)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"],
+
+  "6/05(금)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"],
+  "6/06(토)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"],
+  "6/07(일)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"],
+
+  "6/09(화)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"],
+  "6/10(수)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"],
+  "6/11(목)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"],
+
+  "6/12(금)": ["롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA", "한화 vs 키움"],
+  "6/13(토)": ["롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA", "한화 vs 키움"],
+  "6/14(일)": ["한화 vs 키움", "롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA"],
+
+  "6/16(화)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"],
+  "6/17(수)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"],
+  "6/18(목)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"],
+
+  "6/19(금)": ["두산 vs LG", "SSG vs NC", "KIA vs KT", "롯데 vs 키움", "삼성 vs 한화"],
+  "6/20(토)": ["두산 vs LG", "SSG vs NC", "KIA vs KT", "롯데 vs 키움", "삼성 vs 한화"],
+  "6/21(일)": ["롯데 vs 키움", "두산 vs LG", "SSG vs NC", "KIA vs KT", "삼성 vs 한화"],
+
+  "6/23(화)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"],
+  "6/24(수)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"],
+  "6/25(목)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"],
+
+  "6/26(금)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"],
+  "6/27(토)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"],
+  "6/28(일)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"],
+
+  "6/30(화)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"]
+};
+
+function showJuneGames(date) {
+  const list = document.getElementById("game-list");
+  list.innerHTML = "";
+
+  if (!juneSchedule[date]) {
+    list.innerHTML = "<p>경기 없음</p>";
+    return;
+  }
+
+  juneSchedule[date].forEach(game => {
+    const p = document.createElement("p");
+    p.textContent = game;
+    list.appendChild(p);
+  });
+}
+
+
+
 /* ===== 날짜 클릭 시 경기 표시 함수 ===== */
 function showMayGames(date) {
   const list = document.getElementById("game-list");
