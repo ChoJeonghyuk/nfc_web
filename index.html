@@ -193,8 +193,6 @@
   <button onclick="showJulyGames('7/31(금)')">7월 31일(금)</button>
 </div>
 
-    
-const augustSchedule = {
 <button onclick="showAugustGames('8/1(토)')">8월 1일(토)</button>
 <button onclick="showAugustGames('8/2(일)')">8월 2일(일)</button>
 
@@ -229,7 +227,7 @@ const augustSchedule = {
 <button onclick="showAugustGames('8/28(금)')">8월 28일(금)</button>
 <button onclick="showAugustGames('8/29(토)')">8월 29일(토)</button>
 <button onclick="showAugustGames('8/30(일)')">8월 30일(일)</button>
-};
+
 
 
     <div id="game-list"></div>
@@ -399,6 +397,8 @@ const julySchedule = {
   "7/31(금)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"]
 };
 
+
+const augustSchedule = {
 "8/1(토)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"],
 "8/2(일)": ["SSG vs 키움", "LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT"],
 
@@ -433,6 +433,7 @@ const julySchedule = {
 "8/28(금)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"],
 "8/29(토)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"],
 "8/30(일)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"]
+};
 
 
 
@@ -470,23 +471,20 @@ function showJulyGames(date) {
 
 
 function showAugustGames(date) {
-  const games = augustGames[date];
+  const list = document.getElementById("game-list");
+  list.innerHTML = "";
 
-  const result = document.getElementById("gameList");
-  result.innerHTML = "";
-
-  if (!games) {
-    result.innerHTML = "경기가 없습니다.";
+  if (!augustSchedule[date]) {
+    list.innerHTML = "<p>경기 없음</p>";
     return;
   }
 
-  games.forEach(game => {
-    const li = document.createElement("li");
-    li.textContent = game;
-    result.appendChild(li);
+  augustSchedule[date].forEach(game => {
+    const p = document.createElement("p");
+    p.textContent = game;
+    list.appendChild(p);
   });
 }
-
 
 
 /* ===== 날짜 클릭 시 경기 표시 함수 ===== */
