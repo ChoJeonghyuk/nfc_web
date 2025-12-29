@@ -95,6 +95,37 @@
   <button onclick="showAprilGames('4/30(목)')">4월 30일(목)</button>
 </div>
 
+<div id="may-buttons">
+  <button onclick="showMayGames('5/01(금)')">5월 01일(금)</button>
+  <button onclick="showMayGames('5/02(토)')">5월 02일(토)</button>
+  <button onclick="showMayGames('5/03(일)')">5월 03일(일)</button>
+  <button onclick="showMayGames('5/05(화)')">5월 05일(화)</button>
+  <button onclick="showMayGames('5/06(수)')">5월 06일(수)</button>
+  <button onclick="showMayGames('5/07(목)')">5월 07일(목)</button>
+  <button onclick="showMayGames('5/08(금)')">5월 08일(금)</button>
+  <button onclick="showMayGames('5/09(토)')">5월 09일(토)</button>
+  <button onclick="showMayGames('5/10(일)')">5월 10일(일)</button>
+  <button onclick="showMayGames('5/12(화)')">5월 12일(화)</button>
+  <button onclick="showMayGames('5/13(수)')">5월 13일(수)</button>
+  <button onclick="showMayGames('5/14(목)')">5월 14일(목)</button>
+  <button onclick="showMayGames('5/15(금)')">5월 15일(금)</button>
+  <button onclick="showMayGames('5/16(토)')">5월 16일(토)</button>
+  <button onclick="showMayGames('5/17(일)')">5월 17일(일)</button>
+  <button onclick="showMayGames('5/19(화)')">5월 19일(화)</button>
+  <button onclick="showMayGames('5/20(수)')">5월 20일(수)</button>
+  <button onclick="showMayGames('5/21(목)')">5월 21일(목)</button>
+  <button onclick="showMayGames('5/22(금)')">5월 22일(금)</button>
+  <button onclick="showMayGames('5/23(토)')">5월 23일(토)</button>
+  <button onclick="showMayGames('5/24(일)')">5월 24일(일)</button>
+  <button onclick="showMayGames('5/26(화)')">5월 26일(화)</button>
+  <button onclick="showMayGames('5/27(수)')">5월 27일(수)</button>
+  <button onclick="showMayGames('5/28(목)')">5월 28일(목)</button>
+  <button onclick="showMayGames('5/29(금)')">5월 29일(금)</button>
+  <button onclick="showMayGames('5/30(토)')">5월 30일(토)</button>
+  <button onclick="showMayGames('5/31(일)')">5월 31일(일)</button>
+</div>
+
+
 
     <div id="game-list"></div>
   </div>
@@ -161,6 +192,53 @@ const aprilSchedule = {
   "4/29(수)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"],
   "4/30(목)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"]
 };
+
+/* ===== 5월 KBO 일정 데이터 ===== */
+const maySchedule = {
+  "5/01(금)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"],
+  "5/02(토)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"],
+  "5/03(일)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"],
+  "5/05(화)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"],
+  "5/06(수)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"],
+  "5/07(목)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"],
+  "5/08(금)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"],
+  "5/09(토)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"],
+  "5/10(일)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"],
+  "5/12(화)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"],
+  "5/13(수)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"],
+  "5/14(목)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"],
+  "5/15(금)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"],
+  "5/16(토)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"],
+  "5/17(일)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"],
+  "5/19(화)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"],
+  "5/20(수)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"],
+  "5/21(목)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"],
+  "5/22(금)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"],
+  "5/23(토)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"],
+  "5/24(일)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"],
+  "5/26(화)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"],
+  "5/27(수)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"],
+  "5/28(목)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"],
+  "5/29(금)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"],
+  "5/30(토)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"],
+  "5/31(일)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"]
+};
+
+/* ===== 날짜 클릭 시 경기 표시 함수 ===== */
+function showMayGames(date) {
+  const list = document.getElementById("game-list");
+  list.innerHTML = "";
+  if (!maySchedule[date]) {
+    list.innerHTML = "<p>경기 없음</p>";
+    return;
+  }
+  maySchedule[date].forEach(game => {
+    const p = document.createElement("p");
+    p.textContent = game;
+    list.appendChild(p);
+  });
+}
+
 
 /* ===== 날짜 클릭 시 경기 표시 함수 (기존 showMarchGames와 동일하게 사용) ===== */
 function showAprilGames(date) {
