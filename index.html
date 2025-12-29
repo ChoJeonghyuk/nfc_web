@@ -1,55 +1,99 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFC 페이지</title>
 
-    <title>내 첫 웹</title>
-<style>
-  body {
-    font-family: sans-serif;
-    text-align: center;
-    padding: 40px 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-transform: translateY(-60px);
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
 
-align-items: center;
-height: 100vh;
+    .screen {
+      display: none;
+    }
 
-  }
-.text {
-  margin-bottom: 150px;
-}
+    .screen.active {
+      display: block;
+    }
 
+    button {
+      margin-top: 15px;
+      padding: 16px 28px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
 
-  a {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 16px 28px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 18px;
-  }
-.blue-button {
-    background-color: #007BFF;
-  }
-.red-button  {
-    background-color: #FF0000;
-  }
+    .blue { background: #007BFF; }
+    .red { background: #FF0000; }
+    .gray { background: #555; }
+  </style>
+</head>
 
-</style>
+<body>
 
-
-  </head>
-  <body>
-<div class="text">
+  <!-- 홈 -->
+  <div id="home" class="screen active">
     <h1>조정혁의 NFC 페이지</h1>
     <p>이 키링을 태그하면 이 페이지가 열립니다.</p>
-</div>
-<a href="https://www.naver.com">네이버로 가보자</a>
-<a href="page1.html" class="blue-button">야구장</a>
-<a href="page2.html" class="red-button">축구장</a>
+
+    <button id="btn-baseball" class="blue">⚾ 야구장</button><br>
+    <button id="btn-soccer" class="red">⚽ 축구장</button>
+  </div>
+
+  <!-- 야구장 -->
+  <div id="baseball" class="screen">
+    <h2>⚾ 야구장</h2>
+    <p>KBO 일정</p>
+    <button id="btn-home-1" class="gray">⬅ 홈으로</button>
+  </div>
+
+  <!-- 축구장 -->
+  <div id="soccer" class="screen">
+    <h2>⚽ 축구장</h2>
+    <p>축구 일정 준비 중</p>
+    <button id="btn-home-2" class="gray">⬅ 홈으로</button>
+  </div>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    // DOM 로드 후 이벤트 등록 (중요)
+    document.addEventListener('DOMContentLoaded', function () {
+
+      document.getElementById('btn-baseball')
+        .addEventListener('click', () => showScreen('baseball'));
+      document.getElementById('btn-baseball')
+        .addEventListener('touchstart', () => showScreen('baseball'));
+
+      document.getElementById('btn-soccer')
+        .addEventListener('click', () => showScreen('soccer'));
+      document.getElementById('btn-soccer')
+        .addEventListener('touchstart', () => showScreen('soccer'));
+
+      document.getElementById('btn-home-1')
+        .addEventListener('click', () => showScreen('home'));
+      document.getElementById('btn-home-1')
+        .addEventListener('touchstart', () => showScreen('home'));
+
+      document.getElementById('btn-home-2')
+        .addEventListener('click', () => showScreen('home'));
+      document.getElementById('btn-home-2')
+        .addEventListener('touchstart', () => showScreen('home'));
+    });
+  </script>
+
+</body>
+</html>
