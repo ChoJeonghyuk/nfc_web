@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NFC 페이지</title>
 
   <style>
@@ -13,13 +14,8 @@
       margin: 0;
     }
 
-    .screen {
-      display: none;
-    }
-
-    .screen.active {
-      display: block;
-    }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
     button {
       margin-top: 15px;
@@ -35,17 +31,15 @@
     .red { background: #FF0000; }
     .gray { background: #555; }
 
-/* 홈으로 버튼 - 모바일 왼쪽 상단 고정 */
-.home-button {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  padding: 10px 14px;
-  font-size: 14px;
-  z-index: 1000;
-}
-
-
+    /* 홈으로 버튼 - 모바일 왼쪽 상단 고정 */
+    .home-button {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      z-index: 1000;
+    }
   </style>
 </head>
 
@@ -66,6 +60,13 @@
     <p>KBO 일정</p>
     <button id="btn-home-1" class="gray home-button">⬅ 홈으로</button>
 
+    <div id="march-buttons">
+      <button onclick="showMarchGames('3/28(토)')">3월 28일(토)</button>
+      <button onclick="showMarchGames('3/29(일)')">3월 29일(일)</button>
+      <button onclick="showMarchGames('3/31(화)')">3월 31일(화)</button>
+    </div>
+
+    <div id="game-list"></div>
   </div>
 
   <!-- 축구장 -->
@@ -73,28 +74,51 @@
     <h2>⚽ 축구장</h2>
     <p>축구 일정 준비 중</p>
     <button id="btn-home-2" class="gray home-button">⬅ 홈으로</button>
-
   </div>
 
   <script>
+    // **페이지 열 때마다 자동 새로고침해서 캐시 무시**
+    window.addEventListener('load', () => {
+      if (!window.location.search.includes('nocache')) {
+        const url = window.location.href.split('?')[0] + '?nocache=' + new Date().getTime();
+        window.location.replace(url);
+      }
+    });
+
     // 화면 즉시 전환
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-      });
+      document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-
     function showScreenDelay(id) {
-      setTimeout(function () {
-        showScreen(id);
-      }, 500);
+      setTimeout(() => showScreen(id), 500);
     }
 
-    // DOM 로드 후 이벤트 등록
-    document.addEventListener('DOMContentLoaded', function () {
+    /* ===== 3월 KBO 일정 데이터 ===== */
+    const marchSchedule = {
+      "3/28(토)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"],
+      "3/29(일)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"],
+      "3/31(화)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"]
+    };
 
+    /* ===== 날짜 클릭 시 경기 표시 ===== */
+    function showMarchGames(date) {
+      const list = document.getElementById("game-list");
+      list.innerHTML = "";
+      if (!marchSchedule[date]) {
+        list.innerHTML = "<p>경기 없음</p>";
+        return;
+      }
+      marchSchedule[date].forEach(game => {
+        const p = document.createElement("p");
+        p.textContent = game;
+        list.appendChild(p);
+      });
+    }
+
+    // DOM 로드 후 버튼 이벤트 등록
+    document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('btn-baseball')
         .addEventListener('click', () => showScreenDelay('baseball'));
       document.getElementById('btn-baseball')
