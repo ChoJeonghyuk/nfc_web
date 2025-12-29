@@ -228,6 +228,14 @@
 <button onclick="showAugustGames('8/29(토)')">8월 29일(토)</button>
 <button onclick="showAugustGames('8/30(일)')">8월 30일(일)</button>
 
+<button onclick="showSeptemberGames('9/1(화)')">9월 1일(화)</button>
+<button onclick="showSeptemberGames('9/2(수)')">9월 2일(수)</button>
+<button onclick="showSeptemberGames('9/3(목)')">9월 3일(목)</button>
+<button onclick="showSeptemberGames('9/4(금)')">9월 4일(금)</button>
+<button onclick="showSeptemberGames('9/5(토)')">9월 5일(토)</button>
+<button onclick="showSeptemberGames('9/6(일)')">9월 6일(일)</button>
+
+
 
 
     <div id="game-list"></div>
@@ -435,6 +443,17 @@ const augustSchedule = {
 "8/30(일)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"]
 };
 
+const septemberSchedule = {
+  "9/1(화)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"],
+  "9/2(수)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"],
+  "9/3(목)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"],
+
+  "9/4(금)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"],
+  "9/5(토)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"],
+  "9/6(일)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"]
+};
+
+
 
 
 function showJuneGames(date) {
@@ -480,6 +499,22 @@ function showAugustGames(date) {
   }
 
   augustSchedule[date].forEach(game => {
+    const p = document.createElement("p");
+    p.textContent = game;
+    list.appendChild(p);
+  });
+}
+
+function showMonthGames(schedule, date) {
+  const list = document.getElementById("game-list");
+  list.innerHTML = "";
+
+  if (!schedule[date]) {
+    list.innerHTML = "<p>경기 없음</p>";
+    return;
+  }
+
+  schedule[date].forEach(game => {
     const p = document.createElement("p");
     p.textContent = game;
     list.appendChild(p);
