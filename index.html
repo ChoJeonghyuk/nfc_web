@@ -505,16 +505,17 @@ function showAugustGames(date) {
   });
 }
 
-function showMonthGames(schedule, date) {
+function showSeptemberGames(date) {
   const list = document.getElementById("game-list");
   list.innerHTML = "";
 
-  if (!schedule[date]) {
+  const games = septemberSchedule[date];
+  if (!games) {
     list.innerHTML = "<p>경기 없음</p>";
     return;
   }
 
-  schedule[date].forEach(game => {
+  games.forEach(game => {
     const p = document.createElement("p");
     p.textContent = game;
     list.appendChild(p);
