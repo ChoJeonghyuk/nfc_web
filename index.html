@@ -34,6 +34,18 @@
     .blue { background: #007BFF; }
     .red { background: #FF0000; }
     .gray { background: #555; }
+
+/* 홈으로 버튼 - 모바일 왼쪽 상단 고정 */
+.home-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+
   </style>
 </head>
 
@@ -52,14 +64,16 @@
   <div id="baseball" class="screen">
     <h2>⚾ 야구장</h2>
     <p>KBO 일정</p>
-    <button id="btn-home-1" class="gray">⬅ 홈으로</button>
+    <button id="btn-home-1" class="gray home-button">⬅ 홈으로</button>
+
   </div>
 
   <!-- 축구장 -->
   <div id="soccer" class="screen">
     <h2>⚽ 축구장</h2>
     <p>축구 일정 준비 중</p>
-    <button id="btn-home-2" class="gray">⬅ 홈으로</button>
+    <button id="btn-home-2" class="gray home-button">⬅ 홈으로</button>
+
   </div>
 
   <script>
@@ -75,7 +89,7 @@
     function showScreenDelay(id) {
       setTimeout(function () {
         showScreen(id);
-      }, 1000);
+      }, 500);
     }
 
     // DOM 로드 후 이벤트 등록
