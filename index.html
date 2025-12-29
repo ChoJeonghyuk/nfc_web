@@ -467,6 +467,25 @@ function showJulyGames(date) {
 }
 
 
+function showAugustGames(date) {
+  const games = augustGames[date];
+
+  const result = document.getElementById("gameList");
+  result.innerHTML = "";
+
+  if (!games) {
+    result.innerHTML = "경기가 없습니다.";
+    return;
+  }
+
+  games.forEach(game => {
+    const li = document.createElement("li");
+    li.textContent = game;
+    result.appendChild(li);
+  });
+}
+
+
 
 /* ===== 날짜 클릭 시 경기 표시 함수 ===== */
 function showMayGames(date) {
