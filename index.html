@@ -63,35 +63,43 @@
   </div>
 
   <script>
+    // 화면 즉시 전환
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => {
-        s.classList.remove('active');
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
       });
       document.getElementById(id).classList.add('active');
     }
 
-    // DOM 로드 후 이벤트 등록 (중요)
+
+    function showScreenDelay(id) {
+      setTimeout(function () {
+        showScreen(id);
+      }, 1000);
+    }
+
+    // DOM 로드 후 이벤트 등록
     document.addEventListener('DOMContentLoaded', function () {
 
       document.getElementById('btn-baseball')
-        .addEventListener('click', () => showScreen('baseball'));
+        .addEventListener('click', () => showScreenDelay('baseball'));
       document.getElementById('btn-baseball')
-        .addEventListener('touchstart', () => showScreen('baseball'));
+        .addEventListener('touchstart', () => showScreenDelay('baseball'));
 
       document.getElementById('btn-soccer')
-        .addEventListener('click', () => showScreen('soccer'));
+        .addEventListener('click', () => showScreenDelay('soccer'));
       document.getElementById('btn-soccer')
-        .addEventListener('touchstart', () => showScreen('soccer'));
+        .addEventListener('touchstart', () => showScreenDelay('soccer'));
 
       document.getElementById('btn-home-1')
-        .addEventListener('click', () => showScreen('home'));
+        .addEventListener('click', () => showScreenDelay('home'));
       document.getElementById('btn-home-1')
-        .addEventListener('touchstart', () => showScreen('home'));
+        .addEventListener('touchstart', () => showScreenDelay('home'));
 
       document.getElementById('btn-home-2')
-        .addEventListener('click', () => showScreen('home'));
+        .addEventListener('click', () => showScreenDelay('home'));
       document.getElementById('btn-home-2')
-        .addEventListener('touchstart', () => showScreen('home'));
+        .addEventListener('touchstart', () => showScreenDelay('home'));
     });
   </script>
 
