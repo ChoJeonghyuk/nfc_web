@@ -161,6 +161,37 @@
   <button onclick="showJuneGames('6/30(화)')">6월 30일(화)</button>
 </div>
 
+<div id="july-buttons">
+  <button onclick="showJulyGames('7/01(수)')">7월 01일(수)</button>
+  <button onclick="showJulyGames('7/02(목)')">7월 02일(목)</button>
+  <button onclick="showJulyGames('7/03(금)')">7월 03일(금)</button>
+
+  <button onclick="showJulyGames('7/04(토)')">7월 04일(토)</button>
+  <button onclick="showJulyGames('7/05(일)')">7월 05일(일)</button>
+
+  <button onclick="showJulyGames('7/07(화)')">7월 07일(화)</button>
+  <button onclick="showJulyGames('7/08(수)')">7월 08일(수)</button>
+  <button onclick="showJulyGames('7/09(목)')">7월 09일(목)</button>
+
+  <button onclick="showJulyGames('7/16(목)')">7월 16일(목)</button>
+  <button onclick="showJulyGames('7/17(금)')">7월 17일(금)</button>
+  <button onclick="showJulyGames('7/18(토)')">7월 18일(토)</button>
+  <button onclick="showJulyGames('7/19(일)')">7월 19일(일)</button>
+
+  <button onclick="showJulyGames('7/21(화)')">7월 21일(화)</button>
+  <button onclick="showJulyGames('7/22(수)')">7월 22일(수)</button>
+  <button onclick="showJulyGames('7/23(목)')">7월 23일(목)</button>
+
+  <button onclick="showJulyGames('7/24(금)')">7월 24일(금)</button>
+  <button onclick="showJulyGames('7/25(토)')">7월 25일(토)</button>
+  <button onclick="showJulyGames('7/26(일)')">7월 26일(일)</button>
+
+  <button onclick="showJulyGames('7/28(화)')">7월 28일(화)</button>
+  <button onclick="showJulyGames('7/29(수)')">7월 29일(수)</button>
+  <button onclick="showJulyGames('7/30(목)')">7월 30일(목)</button>
+
+  <button onclick="showJulyGames('7/31(금)')">7월 31일(금)</button>
+</div>
 
 
     <div id="game-list"></div>
@@ -297,6 +328,40 @@ const juneSchedule = {
   "6/30(화)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"]
 };
 
+/* ===== 7월 KBO 일정 데이터 ===== */
+const julySchedule = {
+  "7/01(수)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"],
+  "7/02(목)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"],
+  "7/03(금)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"],
+
+  "7/04(토)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"],
+  "7/05(일)": ["두산 vs 키움", "한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA"],
+
+  "7/07(화)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"],
+  "7/08(수)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"],
+  "7/09(목)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"],
+
+  "7/16(목)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"],
+  "7/17(금)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"],
+  "7/18(토)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"],
+  "7/19(일)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"],
+
+  "7/21(화)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"],
+  "7/22(수)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"],
+  "7/23(목)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"],
+
+  "7/24(금)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"],
+  "7/25(토)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"],
+  "7/26(일)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"],
+
+  "7/28(화)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"],
+  "7/29(수)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"],
+  "7/30(목)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"],
+
+  "7/31(금)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"]
+};
+
+
 function showJuneGames(date) {
   const list = document.getElementById("game-list");
   list.innerHTML = "";
@@ -307,6 +372,22 @@ function showJuneGames(date) {
   }
 
   juneSchedule[date].forEach(game => {
+    const p = document.createElement("p");
+    p.textContent = game;
+    list.appendChild(p);
+  });
+}
+
+function showJulyGames(date) {
+  const list = document.getElementById("game-list");
+  list.innerHTML = "";
+
+  if (!julySchedule[date]) {
+    list.innerHTML = "<p>경기 없음</p>";
+    return;
+  }
+
+  julySchedule[date].forEach(game => {
     const p = document.createElement("p");
     p.textContent = game;
     list.appendChild(p);
