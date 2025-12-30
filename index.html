@@ -3,103 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NFC 페이지</title>
+  <title>조정혁의 NFC 페이지</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 20px; margin: 0; }
-    .screen { display: none; }
-    .screen.active { display: block; }
-    button { margin-top: 10px; padding: 12px 20px; font-size: 16px; border-radius: 10px; border: none; color: white; cursor: pointer; }
+    /* 기본 스타일 */
+    body { font-family: sans-serif; text-align: center; padding: 0; margin: 0; background: #f8f9fa; }
+    button { margin-top: 10px; padding: 12px 20px; font-size: 16px; border-radius: 10px; border: none; color: white; cursor: pointer; transition: 0.2s; }
+    button:active { opacity: 0.7; }
+    
     .blue { background: #007BFF; }
     .red { background: #FF0000; }
     .gray { background: #555; }
-    /* 날짜 버튼 공통 스타일 수정 */
-.day-btn {
-  background: #28a745;
-  margin: 5px;
-  padding: 8px 12px; /* 여백 축소 */
-  font-size: 14px;
-  width: auto; /* 고정 width 삭제 */
-  display: inline-block; /* 글자 크기에 맞춤 */
-  max-width: none;
-}
+    .green { background: #28a745; }
 
-/* 선택되지 않은 버튼들이 아래로 내려갔을 때의 스타일 */
-.day-btn.minimized {
-  background: #6c757d; /* 회색조로 변경 */
-  font-size: 12px;
-  padding: 5px 8px;
-  opacity: 0.7;
-}
+    /* 화면 전환 */
+    .screen { display: none; position: relative; padding: 60px 20px 20px 20px; min-height: 100vh; box-sizing: border-box; }
+    .screen.active { display: block; }
+    #home { padding-top: 100px; } /* 홈 화면은 중앙 배치를 위해 여백 조정 */
 
-/* 아래로 이동할 버튼들을 담을 컨테이너 */
-.minimized-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px dashed #ccc;
-}
-/* 게임 한 줄에 대한 스타일 */
-.game-row {
-  display: flex;
-  justify-content: space-between; /* 양 끝 배치 */
-  align-items: center;
-  margin: 10px 0;
-  font-size: 0.95rem;
-  color: #555;
-  border-bottom: 1px dotted #eee;
-  padding-bottom: 5px;
-}
+    /* 홈으로 버튼 (왼쪽 상단 고정) */
+    .home-button { position: absolute; top: 15px; left: 15px; padding: 8px 12px; font-size: 14px; z-index: 100; margin-top: 0; }
 
-/* 구장 이름 스타일 */
-.stadium-name {
-  font-size: 0.85rem;
-  color: #888;
-  font-weight: normal;
-}
+    /* 날짜/시리즈 버튼 스타일 */
+    .day-btn { background: #28a745; margin: 5px; padding: 8px 12px; font-size: 14px; width: auto; display: inline-block; }
+    .day-btn.minimized { background: #6c757d; font-size: 12px; padding: 5px 8px; opacity: 0.7; }
 
-/* 홈으로 버튼을 왼쪽 상단으로 고정 */
-.home-button {
-  position: absolute; /* 부모 요소를 기준으로 절대 위치 설정 */
-  top: 15px;         /* 상단에서 15px 띄움 */
-  left: 15px;        /* 왼쪽에서 15px 띄움 */
-  padding: 8px 12px; /* 버튼 크기를 조금 더 작고 깔끔하게 조절 */
-  font-size: 14px;
-  z-index: 100;      /* 다른 요소보다 위에 보이도록 설정 */
-}
+    /* 아래로 이동한 버튼 컨테이너 */
+    .minimized-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; }
 
-/* 버튼이 들어가는 화면(screen)에 위치 기준점 설정 */
-.screen {
-  display: none;
-  position: relative; /* 자식 요소인 .home-button의 기준점이 됨 */
-  padding-top: 50px;  /* 버튼과 제목이 겹치지 않도록 상단 여백 추가 */
-}
-
-
+    /* 게임 리스트 스타일 */
+    #game-list { background: white; border-radius: 15px; padding: 15px; margin: 15px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
+    .game-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 0.95rem; color: #333; border-bottom: 1px dotted #eee; padding-bottom: 8px; }
+    .stadium-name { font-size: 0.85rem; color: #888; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; }
   </style>
 </head>
 <body>
 
   <div id="home" class="screen active">
     <h1>조정혁의 NFC 페이지</h1>
-    <p>이 키링을 태그하면 이 페이지가 열립니다.</p>
-    <button id="btn-baseball" class="blue">⚾ 야구장</button><br>
-    <button id="btn-soccer" class="red">⚽ 축구장</button>
+    <p>이 키링을 태그하면 페이지가 열립니다.</p>
+    <button id="btn-baseball" class="blue">⚾ 야구장 일정</button><br>
+    <button id="btn-soccer" class="red">⚽ 축구장 일정</button>
   </div>
 
   <div id="baseball" class="screen">
-    <button id="btn-home-1" class="gray home-button">⬅ 홈으로</button>
-    <h2>⚾ 야구장</h2>
-    <p>KBO 일정 (월을 선택하세요)</p>
+    <button class="gray home-button btn-home">⬅ 홈으로</button>
+    <h2>⚾ 야구장 일정</h2>
+    <p>2025 KBO (월을 선택하세요)</p>
     
-    <button class="blue" onclick="showMonth('march')">3월</button>
-    <button class="blue" onclick="showMonth('april')">4월</button>
-    <button class="blue" onclick="showMonth('may')">5월</button>
-    <button class="blue" onclick="showMonth('june')">6월</button>
-    <button class="blue" onclick="showMonth('july')">7월</button>
-    <button class="blue" onclick="showMonth('august')">8월</button>
-    <button class="blue" onclick="showMonth('september')">9월</button>
+    <div id="month-selector">
+      <button class="blue" onclick="showMonth('march')">3월</button>
+      <button class="blue" onclick="showMonth('april')">4월</button>
+      <button class="blue" onclick="showMonth('may')">5월</button>
+      <button class="blue" onclick="showMonth('june')">6월</button>
+      <button class="blue" onclick="showMonth('july')">7월</button>
+      <button class="blue" onclick="showMonth('august')">8월</button>
+      <button class="blue" onclick="showMonth('september')">9월</button>
+    </div>
 
     <div id="march-buttons" class="month-container"></div>
     <div id="april-buttons" class="month-container"></div>
@@ -109,175 +68,125 @@
     <div id="august-buttons" class="month-container"></div>
     <div id="september-buttons" class="month-container"></div>
 
-    <div id="game-list">대진표를 보려면 날짜를 선택하세요.</div>
+    <div id="game-list"></div>
   </div>
 
   <div id="soccer" class="screen">
-    <h2>⚽ 축구장</h2>
-    <p>축구 일정 준비 중</p>
-    <button id="btn-home-2" class="gray home-button">⬅ 홈으로</button>
+    <button class="gray home-button btn-home">⬅ 홈으로</button>
+    <h2>⚽ 축구장 일정</h2>
+    <p>K리그 일정 준비 중입니다.</p>
   </div>
 
-
   <script>
-    /* 데이터 정의 */
     const allSchedules = {
       march: { "3/28(토)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"], "3/29(일)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"], "3/31(화)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"] },
       april: { "4/01(수)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"], "4/02(목)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"], "4/03(금)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/04(토)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/05(일)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/07(화)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/08(수)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/09(목)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/10(금)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/11(토)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/12(일)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/14(화)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/15(수)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/16(목)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/17(금)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/18(토)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/19(일)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/21(화)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/22(수)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/23(목)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/24(금)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/25(토)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/26(일)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/28(화)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"], "4/29(수)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"], "4/30(목)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"] },
       may: { "5/01(금)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"], "5/02(토)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"], "5/03(일)": ["NC vs LG", "롯데 vs SSG", "한화 vs 삼성", "KT vs KIA", "두산 vs 키움"], "5/05(화)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"], "5/06(수)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"], "5/07(목)": ["두산 vs LG", "NC vs SSG", "키움 vs 삼성", "롯데 vs KT", "한화 vs KIA"], "5/08(금)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"], "5/09(토)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"], "5/10(일)": ["SSG vs 두산", "KIA vs 롯데", "삼성 vs NC", "KT vs 키움", "LG vs 한화"], "5/12(화)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"], "5/13(수)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"], "5/14(목)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "두산 vs KIA", "한화 vs 키움"], "5/15(금)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"], "5/16(토)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"], "5/17(일)": ["롯데 vs 두산", "LG vs SSG", "KIA vs 삼성", "키움 vs NC", "한화 vs KT"], "5/19(화)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"], "5/20(수)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"], "5/21(목)": ["NC vs 두산", "KT vs 삼성", "LG vs KIA", "SSG vs 키움", "롯데 vs 한화"], "5/22(금)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"], "5/23(토)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"], "5/24(일)": ["키움 vs LG", "삼성 vs 롯데", "NC vs KT", "SSG vs KIA", "두산 vs 한화"], "5/26(화)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"], "5/27(수)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"], "5/28(목)": ["KT vs 두산", "삼성 vs SSG", "LG vs 롯데", "한화 vs NC", "KIA vs 키움"], "5/29(금)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"], "5/30(토)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"], "5/31(일)": ["KIA vs LG", "두산 vs 삼성", "롯데 vs NC", "KT vs 키움", "SSG vs 한화"] },
       june: { "6/02(화)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"], "6/03(수)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"], "6/04(목)": ["한화 vs 두산", "키움 vs SSG", "NC vs 삼성", "LG vs KT", "롯데 vs KIA"], "6/05(금)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"], "6/06(토)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"], "6/07(일)": ["키움 vs 두산", "KT vs SSG", "한화 vs 롯데", "LG vs NC", "삼성 vs KIA"], "6/09(화)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"], "6/10(수)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"], "6/11(목)": ["SSG vs LG", "두산 vs 롯데", "삼성 vs KT", "NC vs 키움", "KIA vs 한화"], "6/12(금)": ["롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA", "한화 vs 키움"], "6/13(토)": ["롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA", "한화 vs 키움"], "6/14(일)": ["롯데 vs LG", "SSG vs 삼성", "NC vs KT", "두산 vs KIA", "한화 vs 키움"], "6/16(화)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"], "6/17(수)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"], "6/18(목)": ["KT vs 두산", "롯데 vs SSG", "키움 vs 삼성", "한화 vs NC", "LG vs KIA"], "6/19(금)": ["두산 vs LG", "SSG vs NC", "KIA vs KT", "롯데 vs 키움", "삼성 vs 한화"], "6/20(토)": ["두산 vs LG", "SSG vs NC", "KIA vs KT", "롯데 vs 키움", "삼성 vs 한화"], "6/21(일)": ["두산 vs LG", "SSG vs NC", "KIA vs KT", "롯데 vs 키움", "삼성 vs 한화"], "6/23(화)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"], "6/24(수)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"], "6/25(목)": ["삼성 vs LG", "NC vs 롯데", "SSG vs KT", "KIA vs 키움", "두산 vs 한화"], "6/26(금)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"], "6/27(토)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"], "6/28(일)": ["KIA vs 두산", "한화 vs SSG", "LG vs 롯데", "KT vs 삼성", "키움 vs NC"], "6/30(화)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"] },
-      july: { "7/01(수)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"], "7/02(목)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"], "7/03(금)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/04(토)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/05(일)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/07(화)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/08(수)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/09(목)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/16(목)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/17(금)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/18(토)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/19(일)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/21(화)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/22(수)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/23(목)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/24(금)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/25(토)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/26(일)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/28(화)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/29(수)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/30(목)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/31(금)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"] },
+      july: { "7/01(수)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"], "7/02(목)": ["롯데 vs 두산", "삼성 vs NC", "SSG vs KIA", "LG vs 키움", "KT vs 한화"], "7/03(금)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/04(토)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/05(일)": ["한화 vs LG", "삼성 vs SSG", "롯데 vs KT", "NC vs KIA", "두산 vs 키움"], "7/07(화)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/08(수)": ["SSG vs 객관", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/09(목)": ["SSG vs 두산", "KIA vs 롯데", "LG vs 삼성", "키움 vs KT", "NC vs 한화"], "7/16(목)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/17(금)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/18(토)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/19(일)": ["KT vs LG", "KIA vs SSG", "롯데 vs 삼성", "두산 vs NC", "키움 vs 한화"], "7/21(화)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/22(수)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/23(목)": ["NC vs LG", "SSG vs 롯데", "두산 vs KT", "한화 vs KIA", "삼성 vs 키움"], "7/24(금)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/25(토)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/26(일)": ["삼성 vs 두산", "NC vs SSG", "KT vs 롯데", "키움 vs KIA", "LG vs 한화"], "7/28(화)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/29(수)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/30(목)": ["키움 vs LG", "두산 vs SSG", "KIA vs 삼성", "KT vs NC", "롯데 vs 한화"], "7/31(금)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"] },
       august: { "8/1(토)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "8/2(일)": ["LG vs 두산", "삼성 vs 롯데", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "8/4(화)": ["NC vs 두산", "LG vs SSG", "키움 vs 롯데", "한화 vs 삼성", "KT vs KIA"], "8/5(수)": ["NC vs 두산", "LG vs SSG", "키움 vs 롯데", "한화 vs 삼성", "KT vs KIA"], "8/6(목)": ["NC vs 두산", "LG vs SSG", "키움 vs 롯데", "한화 vs 삼성", "KT vs KIA"], "8/7(금)": ["KIA vs LG", "두산 vs 삼성", "SSG vs NC", "롯데 vs KT", "키움 vs 한화"], "8/8(토)": ["KIA vs LG", "두산 vs 삼성", "SSG vs NC", "롯데 vs KT", "키움 vs 한화"], "8/9(일)": ["KIA vs LG", "두산 vs 삼성", "SSG vs NC", "롯데 vs KT", "키움 vs 한화"], "8/11(화)": ["한화 vs 두산", "롯데 vs SSG", "KT vs NC", "삼성 vs KIA", "LG vs 키움"], "8/12(수)": ["한화 vs 두산", "롯데 vs SSG", "KT vs NC", "삼성 vs KIA", "LG vs 키움"], "8/13(목)": ["한화 vs 두산", "롯데 vs SSG", "KT vs NC", "삼성 vs KIA", "LG vs 키움"], "8/14(금)": ["SSG vs LG", "NC vs 롯데", "한화 vs 삼성", "키움 vs KT", "두산 vs KIA"], "8/15(토)": ["SSG vs LG", "NC vs 롯데", "한화 vs 삼성", "키움 vs KT", "두산 vs KIA"], "8/16(일)": ["SSG vs LG", "NC vs 롯데", "한화 vs 삼성", "키움 vs KT", "두산 vs KIA"], "8/18(화)": ["KT vs LG", "키움 vs 롯데", "SSG vs 삼성", "두산 vs NC", "KIA vs 한화"], "8/19(수)": ["KT vs LG", "키움 vs 롯데", "SSG vs 삼성", "두산 vs NC", "KIA vs 한화"], "8/20(목)": ["KT vs LG", "키움 vs 롯데", "SSG vs 삼성", "두산 vs NC", "KIA vs 한화"], "8/21(금)": ["롯데 vs 두산", "KT vs SSG", "삼성 vs NC", "KIA vs 키움", "LG vs 한화"], "8/22(토)": ["롯데 vs 두산", "KT vs SSG", "삼성 vs NC", "KIA vs 키움", "LG vs 한화"], "8/23(일)": ["롯데 vs 두산", "KT vs SSG", "삼성 vs NC", "KIA vs 키움", "LG vs 한화"], "8/25(화)": ["NC vs LG", "한화 vs SSG", "두산 vs KT", "롯데 vs KIA", "삼성 vs 키움"], "8/26(수)": ["NC vs LG", "한화 vs SSG", "두산 vs KT", "롯데 vs KIA", "삼성 vs 키움"], "8/27(목)": ["NC vs LG", "한화 vs SSG", "두산 vs KT", "롯데 vs KIA", "삼성 vs 키움"], "8/28(금)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"], "8/29(토)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"], "8/30(일)": ["키움 vs 두산", "LG vs 롯데", "KT vs 삼성", "SSG vs KIA", "NC vs 한화"] },
       september: { "9/1(화)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/2(수)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/3(목)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/4(금)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"], "9/5(토)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"], "9/6(일)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"] }
     };
 
+    const stadiumMap = { "LG": "잠실", "두산": "잠실", "한화": "대전", "삼성": "대구", "SSG": "문학", "NC": "창원", "KIA": "광주", "롯데": "부산", "키움": "고척", "KT": "수원" };
 
-
-    // 화면 전환
+    // 화면 전환 함수
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
     }
 
-    function showScreenDelay(id) {
-      setTimeout(() => showScreen(id), 200);
+    // 월 선택 시 버튼 생성
+    function showMonth(month) {
+      document.querySelectorAll('.month-container').forEach(c => {
+        c.style.display = 'none';
+        resetButtons(c);
+      });
+      const list = document.getElementById("game-list");
+      list.style.display = 'none';
+      
+      const container = document.getElementById(month + '-buttons');
+      container.style.display = 'block';
+      if (container.innerHTML === "") generateSeriesButtons(month, container);
     }
 
-    // 특정 월 선택 시 동작
-   function showMonth(month) {
-  // 모든 월 컨테이너를 숨기면서 내부 버튼 위치도 초기화
-  document.querySelectorAll('.month-container').forEach(c => {
-    c.style.display = 'none';
-    if (typeof resetButtons === "function") resetButtons(c); 
-  });
-  
-  const list = document.getElementById("game-list");
-  list.style.display = 'none'; 
-  
-  const container = document.getElementById(month + '-buttons');
-  container.style.display = 'block';
-  if (container.innerHTML === "") {
-    generateSeriesButtons(month, container);
-  }
-}
-
-
-    // 시리즈별 버튼 자동 생성 로직
+    // 시리즈 버튼 생성
     function generateSeriesButtons(month, container) {
       const schedule = allSchedules[month];
       const dates = Object.keys(schedule);
       let i = 0;
-
       while (i < dates.length) {
-        let startIdx = i;
-        let endIdx = i;
+        let startIdx = i, endIdx = i;
+        while (endIdx + 1 < dates.length && JSON.stringify(schedule[dates[startIdx]]) === JSON.stringify(schedule[dates[endIdx + 1]])) endIdx++;
         
-        // 다음 날짜들과 대진표가 같은지 비교 (시리즈 찾기)
-        while (endIdx + 1 < dates.length && 
-               JSON.stringify(schedule[dates[startIdx]]) === JSON.stringify(schedule[dates[endIdx + 1]])) {
-          endIdx++;
-        }
-
-        // 버튼 생성
         const btn = document.createElement("button");
         btn.className = "day-btn";
         const label = (startIdx === endIdx) ? dates[startIdx] : `${dates[startIdx]} ~ ${dates[endIdx]}`;
         btn.textContent = label;
         
-        // 클릭 시 게임 리스트 렌더링
         const targetDate = dates[startIdx];
-        btn.onclick = (event) => renderGames(allSchedules[month], targetDate, event, label);
-        
+        btn.onclick = (e) => renderGames(schedule, targetDate, e, label);
         container.appendChild(btn);
-        i = endIdx + 1; // 다음 시리즈로 이동
+        i = endIdx + 1;
       }
     }
 
-  // 팀별 구장 정보 데이터
-const stadiumMap = {
-  "LG": "잠실", "두산": "잠실", "한화": "대전", "삼성": "대구", 
-  "SSG": "문학", "NC": "창원", "KIA": "광주", "롯데": "부산", 
-  "키움": "고척", "KT": "수원"
-};
+    // 게임 리스트 출력
+    function renderGames(schedule, date, event, label) {
+      const list = document.getElementById("game-list");
+      const clickedButton = event.currentTarget;
+      const parent = clickedButton.parentNode;
 
-// [함수 1] 게임 리스트 출력 및 버튼 재배치 로직
-function renderGames(schedule, date, event, label) {
-  const list = document.getElementById("game-list");
-  const clickedButton = event.currentTarget;
-  const parent = clickedButton.parentNode;
+      if (list.style.display === "block" && clickedButton.nextSibling === list) {
+        list.style.display = "none";
+        resetButtons(parent);
+        return;
+      }
 
-  // 토글: 이미 열려있는 버튼을 다시 누르면 원래대로 복구
-  if (list.style.display === "block" && clickedButton.nextSibling === list) {
-    list.style.display = "none";
-    resetButtons(parent);
-    return;
-  }
+      resetButtons(parent);
+      list.innerHTML = `<h3>${label}</h3>`;
+      schedule[date].forEach(game => {
+        const teams = game.split(" vs ");
+        const stadium = stadiumMap[teams[1]?.trim()] || "미정";
+        const p = document.createElement("p");
+        p.className = "game-row";
+        p.innerHTML = `<span>${game}</span><span class="stadium-name">${stadium}</span>`;
+        list.appendChild(p);
+      });
 
-  // 1. 버튼 상태 초기화 (기존에 아래로 내려갔던 버튼들을 위로 올림)
-  resetButtons(parent);
+      parent.insertBefore(list, clickedButton.nextSibling);
+      list.style.display = "block";
 
-  // 2. 일정 내용 생성
-  list.innerHTML = "";
-  const title = document.createElement("h3");
-  title.textContent = label;
-  list.appendChild(title);
+      let minContainer = parent.querySelector(".minimized-container") || document.createElement("div");
+      minContainer.className = "minimized-container";
+      parent.appendChild(minContainer);
 
-  if (!schedule[date]) {
-    list.innerHTML += "<p class='game-row'><span>경기 없음</span></p>";
-  } else {
-    schedule[date].forEach(game => {
-      const p = document.createElement("p");
-      p.className = "game-row";
-      const teams = game.split(" vs ");
-      const homeTeam = teams[1] ? teams[1].trim() : "";
-      const stadium = stadiumMap[homeTeam] || "";
-      p.innerHTML = `<span>${game}</span><span class="stadium-name">${stadium}</span>`;
-      list.appendChild(p);
-    });
-  }
-
-  // 3. 레이아웃 배치: 클릭한 버튼 바로 뒤에 일정창 표시
-  parent.insertBefore(list, clickedButton.nextSibling);
-  list.style.display = "block";
-
-  // 4. 나머지 버튼들 아래로 이동 (minimized-container 생성)
-  let minContainer = parent.querySelector(".minimized-container");
-  if (!minContainer) {
-    minContainer = document.createElement("div");
-    minContainer.className = "minimized-container";
-    parent.appendChild(minContainer);
-  }
-
-  const allButtons = Array.from(parent.querySelectorAll(".day-btn"));
-  allButtons.forEach(btn => {
-    if (btn !== clickedButton) {
-      btn.classList.add("minimized");
-      minContainer.appendChild(btn); // 아래쪽 박스로 이동
+      Array.from(parent.querySelectorAll(".day-btn")).forEach(btn => {
+        if (btn !== clickedButton) {
+          btn.classList.add("minimized");
+          minContainer.appendChild(btn);
+        }
+      });
     }
-  });
-}
 
-// [함수 2] 아래로 내려간 버튼들을 다시 위로 올리는 도우미 함수
-function resetButtons(parent) {
-  const minContainer = parent.querySelector(".minimized-container");
-  const list = document.getElementById("game-list");
-  
-  if (minContainer) {
-    const buttons = Array.from(minContainer.querySelectorAll(".day-btn"));
-    buttons.forEach(btn => {
-      btn.classList.remove("minimized");
-      // 일정창(list)보다 앞에 순서대로 다시 삽입
-      parent.insertBefore(btn, list);
-    });
-    minContainer.remove(); // 다 옮겼으면 아래쪽 박스 삭제
-  }
-}
-    // 초기화 및 이벤트 바인딩
+    function resetButtons(parent) {
+      const minContainer = parent.querySelector(".minimized-container");
+      const list = document.getElementById("game-list");
+      if (minContainer) {
+        Array.from(minContainer.querySelectorAll(".day-btn")).forEach(btn => {
+          btn.classList.remove("minimized");
+          parent.insertBefore(btn, list);
+        });
+        minContainer.remove();
+      }
+    }
+
+    // 이벤트 리스너
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('btn-baseball').onclick = () => showScreenDelay('baseball');
-      document.getElementById('btn-soccer').onclick = () => showScreenDelay('soccer');
-      document.getElementById('btn-home-1').onclick = () => showScreenDelay('home');
-      document.getElementById('btn-home-2').onclick = () => showScreenDelay('home');
+      document.getElementById('btn-baseball').onclick = () => showScreen('baseball');
+      document.getElementById('btn-soccer').onclick = () => showScreen('soccer');
+      document.querySelectorAll('.btn-home').forEach(btn => btn.onclick = () => showScreen('home'));
     });
   </script>
 </body>
