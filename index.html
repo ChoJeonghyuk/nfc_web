@@ -15,7 +15,35 @@
     .day-btn { background: #28a745; margin: 5px; width: 80%; max-width: 300px; } /* 일별/시리즈 버튼 색상 */
     .home-button { position: fixed; top: 10px; left: 10px; padding: 10px 14px; font-size: 14px; z-index: 1000; }
     .month-container { display: none; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
-    #game-list { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 10px; }
+    #game-list {
+  margin: 10px auto;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: none; /* 기본적으로 숨김 */
+  text-align: left; /* 일정 내용은 왼쪽 정렬이 보기 좋습니다 */
+  width: 90%; /* 모바일에서 가득 차게 */
+  box-sizing: border-box;
+#game-list {
+  /* 기존 스타일 유지하면서 아래 한 줄 추가 */
+  margin-bottom: 20px; 
+}
+
+/* 일정 내부 텍스트 스타일 추가 */
+#game-list h3 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+#game-list p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
   </style>
 </head>
 <body>
@@ -116,22 +144,43 @@
         
         // 클릭 시 게임 리스트 렌더링
         const targetDate = dates[startIdx];
-        btn.onclick = () => renderGames(month, targetDate, label);
+        btn.onclick = (event) => renderGames(allSchedules[month], targetDate, event, label);
         
         container.appendChild(btn);
         i = endIdx + 1; // 다음 시리즈로 이동
       }
     }
 
-    // 게임 리스트 표시
-    function renderGames(month, date, label) {
-      const list = document.getElementById("game-list");
-      const games = allSchedules[month][date];
-      
-      let html = `<h3>[${label}]</h3>`;
-      games.forEach(g => { html += `<p>${g}</p>`; });
-      list.innerHTML = html;
-    }
+   function renderGames(schedule, date, event, label) {
+  const list = document.getElementById("game-list");
+  
+  // 1. 내용 생성
+  list.innerHTML = "";
+  
+  // 제목 추가 (버튼에 적힌 날짜 라벨 사용)
+  const title = document.createElement("h3");
+  title.textContent = label;
+  list.appendChild(title);
+
+  // 대진표 목록 추가
+  if (!schedule[date]) {
+    list.innerHTML += "<p>경기 없음</p>";
+  } else {
+    schedule[date].forEach(game => {
+      const p = document.createElement("p");
+      p.textContent = game;
+      list.appendChild(p);
+    });
+  }
+
+  // 2. 위치 이동 (핵심!)
+  // 클릭된 버튼 바로 뒤로 일정 박스를 옮깁니다.
+  const clickedButton = event.currentTarget; 
+  clickedButton.parentNode.insertBefore(list, clickedButton.nextSibling);
+
+  // 3. 화면에 표시
+  list.style.display = "block";
+}
 
     // 초기화 및 이벤트 바인딩
     document.addEventListener('DOMContentLoaded', () => {
