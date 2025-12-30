@@ -12,38 +12,71 @@
     .blue { background: #007BFF; }
     .red { background: #FF0000; }
     .gray { background: #555; }
-    .day-btn { background: #28a745; margin: 5px; width: 80%; max-width: 300px; } /* 일별/시리즈 버튼 색상 */
-    .home-button { position: fixed; top: 10px; left: 10px; padding: 10px 14px; font-size: 14px; z-index: 1000; }
-    .month-container { display: none; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
-    #game-list {
-  margin: 10px auto;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  display: none; /* 기본적으로 숨김 */
-  text-align: left; /* 일정 내용은 왼쪽 정렬이 보기 좋습니다 */
-  width: 90%; /* 모바일에서 가득 차게 */
-  box-sizing: border-box;
-#game-list {
-  /* 기존 스타일 유지하면서 아래 한 줄 추가 */
-  margin-bottom: 20px; 
+    /* 날짜 버튼 공통 스타일 수정 */
+.day-btn {
+  background: #28a745;
+  margin: 5px;
+  padding: 8px 12px; /* 여백 축소 */
+  font-size: 14px;
+  width: auto; /* 고정 width 삭제 */
+  display: inline-block; /* 글자 크기에 맞춤 */
+  max-width: none;
 }
 
-/* 일정 내부 텍스트 스타일 추가 */
-#game-list h3 {
-  font-size: 1.1rem;
-  margin-top: 0;
-  color: #333;
-  border-bottom: 1px solid #eee;
+/* 선택되지 않은 버튼들이 아래로 내려갔을 때의 스타일 */
+.day-btn.minimized {
+  background: #6c757d; /* 회색조로 변경 */
+  font-size: 12px;
+  padding: 5px 8px;
+  opacity: 0.7;
+}
+
+/* 아래로 이동할 버튼들을 담을 컨테이너 */
+.minimized-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #ccc;
+}
+/* 게임 한 줄에 대한 스타일 */
+.game-row {
+  display: flex;
+  justify-content: space-between; /* 양 끝 배치 */
+  align-items: center;
+  margin: 10px 0;
+  font-size: 0.95rem;
+  color: #555;
+  border-bottom: 1px dotted #eee;
   padding-bottom: 5px;
 }
 
-#game-list p {
-  margin: 5px 0;
-  font-size: 0.95rem;
-  color: #555;
+/* 구장 이름 스타일 */
+.stadium-name {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
 }
+
+/* 홈으로 버튼을 왼쪽 상단으로 고정 */
+.home-button {
+  position: absolute; /* 부모 요소를 기준으로 절대 위치 설정 */
+  top: 15px;         /* 상단에서 15px 띄움 */
+  left: 15px;        /* 왼쪽에서 15px 띄움 */
+  padding: 8px 12px; /* 버튼 크기를 조금 더 작고 깔끔하게 조절 */
+  font-size: 14px;
+  z-index: 100;      /* 다른 요소보다 위에 보이도록 설정 */
+}
+
+/* 버튼이 들어가는 화면(screen)에 위치 기준점 설정 */
+.screen {
+  display: none;
+  position: relative; /* 자식 요소인 .home-button의 기준점이 됨 */
+  padding-top: 50px;  /* 버튼과 제목이 겹치지 않도록 상단 여백 추가 */
+}
+
+
   </style>
 </head>
 <body>
@@ -85,6 +118,7 @@
     <button id="btn-home-2" class="gray home-button">⬅ 홈으로</button>
   </div>
 
+
   <script>
     /* 데이터 정의 */
     const allSchedules = {
@@ -97,6 +131,8 @@
       september: { "9/1(화)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/2(수)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/3(목)": ["LG vs 두산", "롯데 vs 삼성", "KIA vs NC", "한화 vs KT", "SSG vs 키움"], "9/4(금)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"], "9/5(토)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"], "9/6(일)": ["삼성 vs LG", "두산 vs SSG", "한화 vs 롯데", "KT vs KIA", "NC vs 키움"] }
     };
 
+
+
     // 화면 전환
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -108,17 +144,23 @@
     }
 
     // 특정 월 선택 시 동작
-    function showMonth(month) {
-      // 모든 월 컨테이너 숨기기
-      document.querySelectorAll('.month-container').forEach(c => c.style.display = 'none');
-      const container = document.getElementById(month + '-buttons');
-      container.style.display = 'block';
-      
-      // 버튼이 비어있으면(처음 누를 때) 생성
-      if (container.innerHTML === "") {
-        generateSeriesButtons(month, container);
-      }
-    }
+   function showMonth(month) {
+  // 모든 월 컨테이너를 숨기면서 내부 버튼 위치도 초기화
+  document.querySelectorAll('.month-container').forEach(c => {
+    c.style.display = 'none';
+    if (typeof resetButtons === "function") resetButtons(c); 
+  });
+  
+  const list = document.getElementById("game-list");
+  list.style.display = 'none'; 
+  
+  const container = document.getElementById(month + '-buttons');
+  container.style.display = 'block';
+  if (container.innerHTML === "") {
+    generateSeriesButtons(month, container);
+  }
+}
+
 
     // 시리즈별 버튼 자동 생성 로직
     function generateSeriesButtons(month, container) {
@@ -151,40 +193,85 @@
       }
     }
 
-   function renderGames(schedule, date, event, label) {
+  // 팀별 구장 정보 데이터
+const stadiumMap = {
+  "LG": "잠실", "두산": "잠실", "한화": "대전", "삼성": "대구", 
+  "SSG": "문학", "NC": "창원", "KIA": "광주", "롯데": "부산", 
+  "키움": "고척", "KT": "수원"
+};
+
+// [함수 1] 게임 리스트 출력 및 버튼 재배치 로직
+function renderGames(schedule, date, event, label) {
   const list = document.getElementById("game-list");
   const clickedButton = event.currentTarget;
+  const parent = clickedButton.parentNode;
 
-  // [추가된 로직] 이미 열려있는 상태에서 같은 버튼을 또 눌렀는지 확인
-  // 리스트가 보이고 있고(block), 위치가 클릭한 버튼 바로 다음(nextSibling)이라면 닫습니다.
+  // 토글: 이미 열려있는 버튼을 다시 누르면 원래대로 복구
   if (list.style.display === "block" && clickedButton.nextSibling === list) {
     list.style.display = "none";
-    return; // 함수 종료
+    resetButtons(parent);
+    return;
   }
 
-  // 1. 내용 생성 (기존과 동일)
+  // 1. 버튼 상태 초기화 (기존에 아래로 내려갔던 버튼들을 위로 올림)
+  resetButtons(parent);
+
+  // 2. 일정 내용 생성
   list.innerHTML = "";
   const title = document.createElement("h3");
   title.textContent = label;
   list.appendChild(title);
 
   if (!schedule[date]) {
-    const p = document.createElement("p");
-    p.textContent = "경기 없음";
-    list.appendChild(p);
+    list.innerHTML += "<p class='game-row'><span>경기 없음</span></p>";
   } else {
     schedule[date].forEach(game => {
       const p = document.createElement("p");
-      p.textContent = game;
+      p.className = "game-row";
+      const teams = game.split(" vs ");
+      const homeTeam = teams[1] ? teams[1].trim() : "";
+      const stadium = stadiumMap[homeTeam] || "";
+      p.innerHTML = `<span>${game}</span><span class="stadium-name">${stadium}</span>`;
       list.appendChild(p);
     });
   }
 
-  // 2. 위치 이동 및 표시
-  clickedButton.parentNode.insertBefore(list, clickedButton.nextSibling);
+  // 3. 레이아웃 배치: 클릭한 버튼 바로 뒤에 일정창 표시
+  parent.insertBefore(list, clickedButton.nextSibling);
   list.style.display = "block";
+
+  // 4. 나머지 버튼들 아래로 이동 (minimized-container 생성)
+  let minContainer = parent.querySelector(".minimized-container");
+  if (!minContainer) {
+    minContainer = document.createElement("div");
+    minContainer.className = "minimized-container";
+    parent.appendChild(minContainer);
+  }
+
+  const allButtons = Array.from(parent.querySelectorAll(".day-btn"));
+  allButtons.forEach(btn => {
+    if (btn !== clickedButton) {
+      btn.classList.add("minimized");
+      minContainer.appendChild(btn); // 아래쪽 박스로 이동
+    }
+  });
 }
 
+// [함수 2] 아래로 내려간 버튼들을 다시 위로 올리는 도우미 함수
+function resetButtons(parent) {
+  const minContainer = parent.querySelector(".minimized-container");
+  const list = document.getElementById("game-list");
+  
+  if (minContainer) {
+    const buttons = Array.from(minContainer.querySelectorAll(".day-btn"));
+    buttons.forEach(btn => {
+      btn.classList.remove("minimized");
+      // 일정창(list)보다 앞에 순서대로 다시 삽입
+      parent.insertBefore(btn, list);
+    });
+    minContainer.remove(); // 다 옮겼으면 아래쪽 박스 삭제
+  }
+}
     // 초기화 및 이벤트 바인딩
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('btn-baseball').onclick = () => showScreenDelay('baseball');
