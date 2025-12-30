@@ -153,18 +153,25 @@
 
    function renderGames(schedule, date, event, label) {
   const list = document.getElementById("game-list");
-  
-  // 1. 내용 생성
+  const clickedButton = event.currentTarget;
+
+  // [추가된 로직] 이미 열려있는 상태에서 같은 버튼을 또 눌렀는지 확인
+  // 리스트가 보이고 있고(block), 위치가 클릭한 버튼 바로 다음(nextSibling)이라면 닫습니다.
+  if (list.style.display === "block" && clickedButton.nextSibling === list) {
+    list.style.display = "none";
+    return; // 함수 종료
+  }
+
+  // 1. 내용 생성 (기존과 동일)
   list.innerHTML = "";
-  
-  // 제목 추가 (버튼에 적힌 날짜 라벨 사용)
   const title = document.createElement("h3");
   title.textContent = label;
   list.appendChild(title);
 
-  // 대진표 목록 추가
   if (!schedule[date]) {
-    list.innerHTML += "<p>경기 없음</p>";
+    const p = document.createElement("p");
+    p.textContent = "경기 없음";
+    list.appendChild(p);
   } else {
     schedule[date].forEach(game => {
       const p = document.createElement("p");
@@ -173,12 +180,8 @@
     });
   }
 
-  // 2. 위치 이동 (핵심!)
-  // 클릭된 버튼 바로 뒤로 일정 박스를 옮깁니다.
-  const clickedButton = event.currentTarget; 
+  // 2. 위치 이동 및 표시
   clickedButton.parentNode.insertBefore(list, clickedButton.nextSibling);
-
-  // 3. 화면에 표시
   list.style.display = "block";
 }
 
