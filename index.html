@@ -34,16 +34,109 @@
     #game-list { background: white; border-radius: 15px; padding: 15px; margin: 15px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
     .game-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 0.95rem; color: #333; border-bottom: 1px dotted #eee; padding-bottom: 8px; }
     .stadium-name { font-size: 0.85rem; color: #888; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; }
+
+/* 상단 버튼 수평 배치 */
+.main-nav { 
+  display: flex; 
+  gap: 10px; 
+  justify-content: center; 
+  margin-top: 20px; 
+}
+.main-nav button { flex: 1; margin-top: 0; }
+
+/* 오늘의 경기 섹션 */
+.today-section {
+  margin-top: 20px;
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+  text-align: left;
+}
+
+.today-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* 플러스 버튼 (+) */
+.filter-btn {
+  width: 30px;
+  height: 30px;
+  background: #eee;
+  color: #333;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+/* 구단 선택 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.modal-content button { margin-top: 0; font-size: 14px; background: #555; }
+
   </style>
 </head>
 <body>
 
-  <div id="home" class="screen active">
-    <h1>조정혁의 NFC 페이지</h1>
-    <p>이 키링을 태그하면 페이지가 열립니다.</p>
-    <button id="btn-baseball" class="blue">⚾ 야구장 일정</button><br>
-    <button id="btn-soccer" class="red">⚽ 축구장 일정</button>
+ <div id="home" class="screen active">
+  <h1>조정혁의 NFC 페이지</h1>
+  
+  <div class="main-nav">
+    <button id="btn-baseball" class="blue">⚾ 야구장</button>
+    <button id="btn-soccer" class="red">⚽ 축구장</button>
   </div>
+
+  <div class="today-section">
+    <div class="today-header">
+      <span style="font-weight: bold; font-size: 1.1rem;">오늘의 경기 <span id="current-filter" style="color:#007BFF; font-size:0.9rem;">(전체)</span></span>
+      <button class="filter-btn" onclick="openModal()">+</button>
+    </div>
+    <div id="today-game-list">
+      <p style="text-align:center; color:#888;">표시할 경기가 없습니다.</p>
+    </div>
+  </div>
+</div>
+
+<div id="team-modal" class="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button onclick="setFilter('전체')">전체보기</button>
+    <button onclick="setFilter('LG')">LG</button>
+    <button onclick="setFilter('두산')">두산</button>
+    <button onclick="setFilter('KIA')">KIA</button>
+    <button onclick="setFilter('삼성')">삼성</button>
+    <button onclick="setFilter('SSG')">SSG</button>
+    <button onclick="setFilter('NC')">NC</button>
+    <button onclick="setFilter('롯데')">롯데</button>
+    <button onclick="setFilter('한화')">한화</button>
+    <button onclick="setFilter('KT')">KT</button>
+    <button onclick="setFilter('키움')">키움</button>
+  </div>
+</div>
 
   <div id="baseball" class="screen">
     <button class="gray home-button btn-home">⬅ 홈으로</button>
@@ -78,6 +171,23 @@
   </div>
 
   <script>
+
+// 야구장 화면을 초기 상태(월 버튼만 보이게)로 되돌리는 함수
+function resetBaseballScreen() {
+  // 1. 모든 월별 상세 버튼 컨테이너 숨기기
+  document.querySelectorAll('.month-container').forEach(c => {
+    c.style.display = 'none';
+    resetButtons(c); // 안에 있던 버튼들(minimized 된 것들) 원래대로 복구
+  });
+
+  // 2. 출력되어 있던 게임 리스트 숨기기
+  const list = document.getElementById("game-list");
+  if (list) {
+    list.style.display = 'none';
+    list.innerHTML = ""; // 내용 비우기
+  }
+}
+
     const allSchedules = {
       march: { "3/28(토)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"], "3/29(일)": ["KT vs LG", "KIA vs SSG", "삼성 vs 롯데", "두산 vs NC", "키움 vs 한화"], "3/31(화)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"] },
       april: { "4/01(수)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"], "4/02(목)": ["KIA vs LG", "키움 vs SSG", "두산 vs 삼성", "롯데 vs NC", "KT vs 한화"], "4/03(금)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/04(토)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/05(일)": ["한화 vs 두산", "SSG vs 롯데", "삼성 vs KT", "NC vs KIA", "LG vs 키움"], "4/07(화)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/08(수)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/09(목)": ["키움 vs 두산", "한화 vs SSG", "KT vs 롯데", "LG vs NC", "삼성 vs KIA"], "4/10(금)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/11(토)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/12(일)": ["SSG vs LG", "NC vs 삼성", "두산 vs KT", "롯데 vs 키움", "KIA vs 한화"], "4/14(화)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/15(수)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/16(목)": ["롯데 vs LG", "두산 vs SSG", "KT vs NC", "키움 vs KIA", "삼성 vs 한화"], "4/17(금)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/18(토)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/19(일)": ["KIA vs 두산", "한화 vs 롯데", "LG vs 삼성", "SSG vs NC", "키움 vs KT"], "4/21(화)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/22(수)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/23(목)": ["한화 vs LG", "두산 vs 롯데", "SSG vs 삼성", "KIA vs KT", "NC vs 키움"], "4/24(금)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/25(토)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/26(일)": ["LG vs 두산", "KT vs SSG", "롯데 vs KIA", "삼성 vs 키움", "NC vs 한화"], "4/28(화)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"], "4/29(수)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"], "4/30(목)": ["삼성 vs 두산", "키움 vs 롯데", "KIA vs NC", "LG vs KT", "SSG vs 한화"] },
@@ -182,12 +292,84 @@
       }
     }
 
-    // 이벤트 리스너
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('btn-baseball').onclick = () => showScreen('baseball');
-      document.getElementById('btn-soccer').onclick = () => showScreen('soccer');
-      document.querySelectorAll('.btn-home').forEach(btn => btn.onclick = () => showScreen('home'));
-    });
+// 모달 열기/닫기
+function openModal() { document.getElementById('team-modal').style.display = 'flex'; }
+function closeModal() { document.getElementById('team-modal').style.display = 'none'; }
+
+// 구단 필터링 및 오늘 날짜 경기 자동 출력 함수
+function setFilter(team) {
+  const displayArea = document.getElementById('today-game-list');
+  const filterLabel = document.getElementById('current-filter');
+  displayArea.innerHTML = ""; 
+
+  // 1. 오늘 날짜 정보 가져오기 (MM/DD(요일) 형식 맞추기)
+  const now = new Date();
+  const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+  const currentMonthName = monthNames[now.getMonth()];
+  const dateStr = (now.getMonth() + 1) + "/" + String(now.getDate()).padStart(2, '0');
+  const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const dayStr = dayNames[now.getDay()];
+  
+  // 데이터 키 형식: "3/28(토)"
+  const todayKey = `${dateStr}(${dayStr})`; 
+  
+  // 상단에 필터 상태 표시
+  filterLabel.textContent = `(${team})`;
+  closeModal();
+
+  // 2. 해당 월과 날짜의 데이터가 있는지 확인
+  const monthData = allSchedules[currentMonthName];
+  const todayGames = monthData ? monthData[todayKey] : null;
+
+  if (!todayGames) {
+    displayArea.innerHTML = `
+      <div style="text-align:center; padding:20px;">
+        <p style="margin:0; font-weight:bold; color:#555;">${todayKey}</p>
+        <p style="margin:5px 0 0; color:#888; font-size:0.9rem;">오늘은 예정된 경기가 없습니다.</p>
+      </div>`;
+    return;
+  }
+
+  // 3. 필터링 로직 (전체 또는 특정 팀)
+  const filtered = team === '전체' 
+    ? todayGames 
+    : todayGames.filter(game => game.includes(team));
+
+  if (filtered.length === 0) {
+    displayArea.innerHTML = `<p style="text-align:center; color:#888; padding:20px;">${todayKey}<br>'${team}' 경기가 없습니다.</p>`;
+    return;
+  }
+
+  // 4. 결과 출력
+  filtered.forEach(game => {
+    const teams = game.split(" vs ");
+    const stadium = stadiumMap[teams[1]?.trim()] || "미정";
+    const div = document.createElement("div");
+    div.className = "game-row";
+    div.innerHTML = `
+      <span><small style="color:#888; margin-right:5px;">${todayKey}</small> <strong>${game}</strong></span>
+      <span class="stadium-name">${stadium}</span>
+    `;
+    displayArea.appendChild(div);
+  });
+}
+
+// DOMContentLoaded 이벤트 리스너 통합 정리
+document.addEventListener('DOMContentLoaded', () => {
+  // 버튼 이벤트 연결
+  document.getElementById('btn-baseball').onclick = () => showScreen('baseball');
+  document.getElementById('btn-soccer').onclick = () => showScreen('soccer');
+  // 기존 코드에서 이 부분을 찾아 수정하세요 (맨 하단 위치)
+document.querySelectorAll('.btn-home').forEach(btn => {
+  btn.onclick = () => {
+    resetBaseballScreen(); // 홈으로 가기 전에 야구장 상태 초기화
+    showScreen('home');
+  };
+});
+
+  // 초기 필터 실행 (오늘 날짜 데이터 로드)
+  setFilter('전체');
+});
   </script>
 </body>
 </html>
